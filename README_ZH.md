@@ -208,6 +208,7 @@ args = [ "-lc", "cd /Users/zzz/fun/mem/codexmem && bun run mcp" ]
 
 ## 文档索引
 
+- `docs/project-docs-consolidated.md`
 - `docs/api-contract.md`
 - `docs/data-schema.md`
 - `docs/session-state-machine.md`

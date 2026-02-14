@@ -179,6 +179,7 @@ Release quality gates:
 
 ## Docs
 
+- `docs/project-docs-consolidated.md`
 - `docs/api-contract.md`
 - `docs/data-schema.md`
 - `docs/session-state-machine.md`

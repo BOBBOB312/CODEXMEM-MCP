@@ -1,61 +1,71 @@
 # CodexMem
 
-Chinese documentation: `README_ZH.md`
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Runtime: Bun](https://img.shields.io/badge/Runtime-Bun-black)](https://bun.sh)
+[![Language: TypeScript](https://img.shields.io/badge/Language-TypeScript-3178c6)](https://www.typescriptlang.org)
+[![MCP](https://img.shields.io/badge/Protocol-MCP-6f42c1)](https://modelcontextprotocol.io)
+
+Chinese documentation: [`README_ZH.md`](./README_ZH.md)
 
 CodexMem is a persistent memory service for Codex/MCP workflows. It captures high-signal session events, processes them asynchronously, and stores structured memories that can be reused across sessions.
 
-Project goals:
-- Enable fully automatic background memory after MCP connection in Codex App.
-- Align core mechanisms and lifecycle semantics with ClaudeMem.
-- Provide production-oriented observability, regression tests, and release gates.
+## Why CodexMem
 
-## Core Features
+- Fully automatic background memory after MCP connection in Codex App.
+- ClaudeMem-aligned lifecycle semantics.
+- Production-oriented queueing, dedupe, observability, and release gates.
+- Project-level retention policy with safe cleanup (soft delete + delayed hard delete).
 
-- Automatic memory lifecycle (enabled by default): `session-init -> observation -> summarize -> session-end(cleanup)`.
-- Multi-platform hook adapters: `claude-code`, `cursor`, `codex`, `raw`.
+## Feature Highlights
+
+- Memory lifecycle: `session-init -> observation -> summarize -> session-end(cleanup)`.
+- Hook adapters: `claude-code`, `cursor`, `codex`, `raw`.
 - MCP tools: `__IMPORTANT`, `search`, `timeline`, `get_observations`, `save_memory`.
-- Vector retrieval backends: `sqlite`, `chroma`, `hybrid`.
-- Queue idempotency and recovery: `pending/processing/failed` state machine + dedupe.
-- Observability: SSE stream, Viewer dashboard, search/latency traces, failure summaries, trend exports.
-- Retention policy: project-level TTL cleanup with soft-delete + delayed hard-delete + dry-run.
+- Vector modes: `sqlite`, `chroma`, `hybrid`.
+- Queue reliability: pending/processing/failed state machine + persistent dedupe keys.
+- Ops observability: SSE stream, viewer dashboard, traces, failure stats, trend exports.
+- Retention TTL: default 30 days inactive -> soft delete, hard delete after grace period.
 
 ## Architecture
 
-- `src/worker/server.ts`: Worker API and queue processing core.
-- `src/mcp/server.ts`: MCP stdio server for tool exposure.
-- `src/cli/codex-bridge.ts`: Watches `~/.codex/sessions/**/*.jsonl` and bridges to Worker events.
-- `src/db/store.ts`: SQLite storage layer (sessions, observations, summaries, queue, vectors, retention policies).
+```mermaid
+flowchart TD
+  A["Codex Session Events"] --> B["codex-bridge"]
+  B --> C["Worker API"]
+  C --> D["Pending Queue"]
+  D --> E["Agent Compression"]
+  E --> F["SQLite Memory Store"]
+  E --> G["Vector Index (SQLite/Chroma)"]
+  H["MCP Tools"] --> C
+  C --> I["Search/Timeline/Observations"]
+```
 
-Flow:
-1. Codex session emits events (user prompt, tool calls, session end).
-2. Bridge forwards events to Worker APIs.
-3. Worker enqueues observation/summarize jobs and processes them asynchronously.
-4. Agent generates structured memory and writes/indexes data.
-5. MCP retrieval tools serve cross-session memory queries.
+Key modules:
+- `src/worker/server.ts`: Worker API and queue processing core.
+- `src/mcp/server.ts`: MCP stdio server.
+- `src/cli/codex-bridge.ts`: Codex session log bridge.
+- `src/db/store.ts`: SQLite storage (sessions, observations, summaries, queue, vectors, retention).
 
 ## Quick Start
 
-### 1) Install dependencies
+### 1) Install
 
 ```bash
 cd /Users/zzz/fun/mem/codexmem
 bun install
 ```
 
-### 2) Start (recommended)
+### 2) Run (recommended)
 
 ```bash
 bun run mcp
 ```
 
-Notes:
-- MCP checks Worker health first.
-- If Worker is unavailable, MCP auto-starts Worker.
-- Once Worker is ready, MCP auto-starts `codex-bridge` for background memory.
+`bun run mcp` auto-checks Worker health, auto-starts Worker when needed, then auto-starts `codex-bridge` for background memory.
 
-### 3) Codex App MCP config example
+### 3) Codex App MCP config
 
-Config file: `/Users/zzz/.codex/config.toml`
+File: `/Users/zzz/.codex/config.toml`
 
 ```toml
 [mcp_servers.codexmem]
@@ -63,80 +73,64 @@ command = "zsh"
 args = [ "-lc", "cd /Users/zzz/fun/mem/codexmem && bun run mcp" ]
 ```
 
-## Common Commands
+## Commands
 
-- Start Worker: `bun run worker`
+- Start worker: `bun run worker`
 - Start MCP: `bun run mcp`
 - Start bridge only: `bun run codex:auto-memory`
-- Hook example: `echo '{"session_id":"sess-1","cwd":"/tmp","prompt":"hello"}' | bun run hook codex session-init`
 - Type check: `bun run check`
-- Run all tests: `bun test`
+- All tests: `bun test`
 
 ## Configuration
 
 Config file: `~/.codexmem/settings.json`
 
-### Basic
+Core:
+- `CODEXMEM_WORKER_HOST`, `CODEXMEM_WORKER_PORT`
+- `CODEXMEM_MCP_ENABLED`
+- `CODEXMEM_PROVIDER`
 
-- `CODEXMEM_WORKER_HOST` (default `127.0.0.1`)
-- `CODEXMEM_WORKER_PORT` (default `37777`)
-- `CODEXMEM_MCP_ENABLED` (default `true`)
-- `CODEXMEM_PROVIDER` (default `openai`)
+Model (OpenAI-compatible):
+- `CODEXMEM_OPENAI_MODEL`
+- `CODEXMEM_OPENAI_EMBEDDING_MODEL`
+- `CODEXMEM_OPENAI_BASE_URL`, `CODEXMEM_OPENAI_API_KEY`
+- `CODEXMEM_OPENAI_EMBEDDING_BASE_URL`, `CODEXMEM_OPENAI_EMBEDDING_API_KEY`
 
-### Model (OpenAI-compatible)
+Vector:
+- `CODEXMEM_VECTOR_BACKEND=sqlite|chroma|hybrid`
+- `CODEXMEM_CHROMA_URL`, `CODEXMEM_CHROMA_COLLECTION`
 
-- `CODEXMEM_OPENAI_MODEL` (default `gpt-4o-mini`)
-- `CODEXMEM_OPENAI_EMBEDDING_MODEL` (default `text-embedding-3-small`)
-- `CODEXMEM_OPENAI_BASE_URL`
-- `CODEXMEM_OPENAI_API_KEY`
-- `CODEXMEM_OPENAI_EMBEDDING_BASE_URL` (optional, inherits main base URL if empty)
-- `CODEXMEM_OPENAI_EMBEDDING_API_KEY` (optional, inherits main API key if empty)
-
-### Vector Search
-
-- `CODEXMEM_VECTOR_BACKEND`: `sqlite | chroma | hybrid`
-- `CODEXMEM_CHROMA_URL`
-- `CODEXMEM_CHROMA_COLLECTION`
-
-### Automation and Stability
-
-- `CODEXMEM_SKIP_TOOLS`
-  - default: `ListMcpResourcesTool,SlashCommand,Skill,TodoWrite,AskUserQuestion`
+Reliability:
+- `CODEXMEM_SKIP_TOOLS` (default: `ListMcpResourcesTool,SlashCommand,Skill,TodoWrite,AskUserQuestion`)
 - `CODEXMEM_STALE_PROCESSING_MS`
-- `CODEXMEM_AUTO_RECOVER_ON_BOOT` (default `false`)
+- `CODEXMEM_AUTO_RECOVER_ON_BOOT=false`
 
-### MCP Auto-bootstrap env flags
+MCP auto-bootstrap env flags:
+- `CODEXMEM_MCP_AUTO_BOOTSTRAP=false`
+- `CODEXMEM_MCP_AUTO_BRIDGE=false`
+- `CODEXMEM_MCP_STOP_WORKER_ON_EXIT=true`
 
-- `CODEXMEM_MCP_AUTO_BOOTSTRAP=false`: disable MCP auto-starting Worker
-- `CODEXMEM_MCP_AUTO_BRIDGE=false`: disable MCP auto-starting bridge
-- `CODEXMEM_MCP_STOP_WORKER_ON_EXIT=true`: stop Worker (spawned by MCP) when MCP exits
-
-### Retention (TTL)
-
-- `CODEXMEM_RETENTION_ENABLED` (default `true`)
-- `CODEXMEM_RETENTION_TTL_DAYS` (default `30`)
-- `CODEXMEM_RETENTION_SOFT_DELETE_DAYS` (default `7`)
-- `CODEXMEM_RETENTION_SWEEP_INTERVAL_MIN` (default `1440`)
+Retention TTL:
+- `CODEXMEM_RETENTION_ENABLED=true`
+- `CODEXMEM_RETENTION_TTL_DAYS=30`
+- `CODEXMEM_RETENTION_SOFT_DELETE_DAYS=7`
+- `CODEXMEM_RETENTION_SWEEP_INTERVAL_MIN=1440`
 
 ## API Overview
 
-### Health
-
+Health:
 - `GET /api/health`
 - `GET /api/readiness`
 - `GET /api/version`
 
-### Session & Memory
-
+Session and memory:
 - `POST /api/sessions/init`
 - `POST /api/sessions/observations`
 - `POST /api/sessions/summarize`
 - `POST /api/sessions/end`
-- `POST /api/sessions/complete` (compat)
 - `POST /api/memory/save`
 
-### Query
-
+Query:
 - `GET /api/search`
 - `GET /api/timeline`
 - `GET /api/context/inject`
@@ -146,66 +140,44 @@ Config file: `~/.codexmem/settings.json`
 - `GET /api/observation/:id`
 - `POST /api/observations/batch`
 
-### Ops
-
-- `GET /api/processing-status`
-- `POST /api/pending-queue/process`
-- `POST /api/ops/retry-failed`
-- `POST /api/ops/backfill/chroma`
+Ops and retention:
 - `GET /api/events`
 - `GET /viewer`
-- `GET /api/ops/search-traces`
-- `GET /api/ops/session-timings`
-- `GET /api/ops/failure-summary`
-- `GET /api/ops/trends`
 - `GET /api/ops/index-status`
-
-### Retention APIs
-
+- `POST /api/ops/retry-failed`
+- `POST /api/ops/backfill/chroma`
+- `POST /api/pending-queue/process`
 - `GET /api/ops/retention/policies`
 - `POST /api/ops/retention/policies`
 - `POST /api/ops/retention/cleanup`
 
-## Retention Policy
-
-Policy behavior:
-- Expiration is based on `last_accessed_at`, not only creation time.
-- Expired memories are soft-deleted first.
-- Hard deletion happens after soft-delete grace period.
-- Project policy supports `enabled`, `pinned`, and `ttlDays`.
-
-Recommended practice:
-1. Run `dry-run` first.
-2. Execute real cleanup after validation.
-3. Set `pinned=true` for critical projects.
-
-## Testing
+## Testing and Gates
 
 - Contract: `bun test tests/contract.test.ts`
 - Hook matrix: `bun run test:hook-matrix`
 - MCP E2E: `bun run test:mcp-e2e`
 - Full suite: `bun test`
 
-Release gates:
-- Parity: `bun run test:parity`
-- Benchmark: `bun run test:benchmark`
-- Soak: `bun run test:soak`
-- Release gate: `bun run test:release-gate`
+Release quality gates:
+- `bun run test:parity`
+- `bun run test:benchmark`
+- `bun run test:soak`
+- `bun run test:release-gate`
 
 ## Troubleshooting
 
 - MCP connected but no memory:
   - Check `GET /api/health`
   - Verify `codex-bridge` process is alive
-  - Ensure tool events or idle session-end events are actually happening
+  - Ensure tool/idle-end events actually happen
 - Unexpected memory reduction:
-  - Verify retention config and cleanup executions
-  - Use dry-run to inspect candidates
-- Weak search recall:
-  - Verify `CODEXMEM_VECTOR_BACKEND`
-  - Verify embedding config and Chroma availability
+  - Inspect retention settings and cleanup calls
+  - Use cleanup `dry-run` first
+- Weak search quality:
+  - Verify vector backend mode
+  - Verify embedding/chroma connectivity
 
-## Docs Index
+## Docs
 
 - `docs/api-contract.md`
 - `docs/data-schema.md`
@@ -218,15 +190,6 @@ Release gates:
 - `docs/t4-release-workflow.md`
 - `docs/claudemem-live-parity.md`
 
-## Contributing
-
-Issues and PRs are welcome. Please include:
-- Reproduction steps
-- Expected vs actual behavior
-- Relevant logs and config snippets
-
 ## License
 
-This project is licensed under the **MIT License**.
-
-See: `/Users/zzz/fun/mem/codexmem/LICENSE`
+This project is licensed under the **MIT License**. See [`LICENSE`](./LICENSE).

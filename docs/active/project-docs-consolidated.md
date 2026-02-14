@@ -30,23 +30,23 @@ Use this file as the primary entrypoint. Stage documents can remain as historica
 
 ## 4. Source of Truth (Keep These As Primary)
 
-1. `docs/api-contract.md`
+1. `docs/active/api-contract.md`
 - MCP + Worker contract definitions.
 - Keep as interface authority.
 
-2. `docs/data-schema.md`
+2. `docs/active/data-schema.md`
 - Data model and migration rules.
 - Keep as storage authority.
 
-3. `docs/session-state-machine.md`
+3. `docs/active/session-state-machine.md`
 - Session/queue lifecycle semantics.
 - Keep as runtime behavior authority.
 
-4. `docs/implementation-status.md`
+4. `docs/active/implementation-status.md`
 - Current implemented surface and latest status.
 - Keep as operations snapshot.
 
-5. `docs/codex-auto-memory.md`
+5. `docs/active/codex-auto-memory.md`
 - Codex auto-memory runtime and bridge behavior.
 - Keep as deployment/operations guide.
 
@@ -54,33 +54,33 @@ Use this file as the primary entrypoint. Stage documents can remain as historica
 
 These are still useful, but mainly for history, audit, and rationale:
 
-- `docs/claude-mem-to-codexmem-mcp-migration.md`
+- `docs/archive/claude-mem-to-codexmem-mcp-migration.md`
   - Value: migration baseline and equivalence goals.
   - Status: historical reference.
 
-- `docs/compatibility-matrix.md`
+- `docs/archive/compatibility-matrix.md`
   - Value: capability-by-capability alignment checklist.
   - Status: historical + periodic regression reference.
 
-- `docs/full-parity-implementation-plan.md`
+- `docs/archive/full-parity-implementation-plan.md`
   - Value: phased implementation strategy.
   - Status: historical (most items completed).
 
-- `docs/final-parity-gap-closure.md`
+- `docs/archive/final-parity-gap-closure.md`
   - Value: gap analysis and closure tasks.
   - Status: historical, useful for postmortem.
 
-- `docs/acceptance-test-cases.md`
+- `docs/release/acceptance-test-cases.md`
   - Value: executable acceptance scenarios.
   - Status: still active for QA/regression.
 
-- `docs/claudemem-live-parity.md`
+- `docs/release/claudemem-live-parity.md`
   - Value: live parity validation procedure.
   - Status: still active when parity must be re-verified.
 
-- `docs/p5-release-gate.md`
-- `docs/t2-baseline-convergence.md`
-- `docs/t4-release-workflow.md`
+- `docs/release/p5-release-gate.md`
+- `docs/release/t2-baseline-convergence.md`
+- `docs/release/t4-release-workflow.md`
   - Value: release quality gate and convergence workflow.
   - Status: active in release engineering.
 
@@ -97,7 +97,7 @@ These are still useful, but mainly for history, audit, and rationale:
 
 Suggested optional next step:
 
-1. Keep active docs in root `docs/`:
+1. Keep active docs in `docs/active/`:
 - `api-contract.md`
 - `data-schema.md`
 - `session-state-machine.md`
@@ -115,10 +115,9 @@ Suggested optional next step:
 
 ## 8. Quick Navigation
 
-- Need API behavior: `docs/api-contract.md`
-- Need schema changes: `docs/data-schema.md`
-- Need queue/session semantics: `docs/session-state-machine.md`
-- Need current implemented scope: `docs/implementation-status.md`
-- Need Codex auto-memory operations: `docs/codex-auto-memory.md`
-- Need release process: `docs/p5-release-gate.md`, `docs/t2-baseline-convergence.md`, `docs/t4-release-workflow.md`
-
+- Need API behavior: `docs/active/api-contract.md`
+- Need schema changes: `docs/active/data-schema.md`
+- Need queue/session semantics: `docs/active/session-state-machine.md`
+- Need current implemented scope: `docs/active/implementation-status.md`
+- Need Codex auto-memory operations: `docs/active/codex-auto-memory.md`
+- Need release process: `docs/release/p5-release-gate.md`, `docs/release/t2-baseline-convergence.md`, `docs/release/t4-release-workflow.md`

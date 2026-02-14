@@ -88,7 +88,7 @@
 - 每轮自动执行 `replay-events`
 - 每轮自动执行 `release-gate`
 - 聚合多轮报告并检查“连续通过 + 回退阈值”
-3. 执行文档：`docs/t2-baseline-convergence.md`
+3. 执行文档：`docs/release/t2-baseline-convergence.md`
 
 剩余收敛动作：
 1. 接入真实 baseline 工件（claude-mem 导出）。

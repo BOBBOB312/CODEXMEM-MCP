@@ -179,17 +179,17 @@ Release quality gates:
 
 ## Docs
 
-- `docs/project-docs-consolidated.md`
-- `docs/api-contract.md`
-- `docs/data-schema.md`
-- `docs/session-state-machine.md`
-- `docs/compatibility-matrix.md`
-- `docs/implementation-status.md`
-- `docs/codex-auto-memory.md`
-- `docs/p5-release-gate.md`
-- `docs/t2-baseline-convergence.md`
-- `docs/t4-release-workflow.md`
-- `docs/claudemem-live-parity.md`
+- `docs/active/project-docs-consolidated.md`
+- `docs/active/api-contract.md`
+- `docs/active/data-schema.md`
+- `docs/active/session-state-machine.md`
+- `docs/archive/compatibility-matrix.md`
+- `docs/active/implementation-status.md`
+- `docs/active/codex-auto-memory.md`
+- `docs/release/p5-release-gate.md`
+- `docs/release/t2-baseline-convergence.md`
+- `docs/release/t4-release-workflow.md`
+- `docs/release/claudemem-live-parity.md`
 
 ## License
 

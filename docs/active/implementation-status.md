@@ -104,7 +104,7 @@
   - 新增 `scripts/release-gate.ts`，聚合 parity/benchmark/soak 并输出统一门禁结论
   - `scripts/parity-report.ts`、`scripts/benchmark.ts` 增加 `--output` 报告落盘能力
   - 新增样例基线输入：`fixtures/p5/replay-events.sample.json`、`fixtures/p5/search-queries.sample.json`
-  - 新增 P5 执行文档：`docs/p5-release-gate.md`
+  - 新增 P5 执行文档：`docs/release/p5-release-gate.md`
 - T1 质量链路补齐（进行中）：
   - OpenAI Agent 升级为分层 prompt（硬约束 + few-shot + 负例约束）
   - schema 增加统一文本清洗与字段级硬约束（长度、去重、白名单）
@@ -115,7 +115,7 @@
 - T2 真实基线收敛（执行链路已完成）：
   - 新增 `scripts/t2-convergence.ts`，支持多轮 `replay-events + release-gate` 连续收敛验证
   - 支持连续通过判定与回退阈值判定（recall/searchP95/batchP95）
-  - 新增执行文档：`docs/t2-baseline-convergence.md`
+  - 新增执行文档：`docs/release/t2-baseline-convergence.md`
 - T3 高级可观测性（第二版已完成）：
   - `/viewer` 升级为交互面板：search trace / session timings / failure summary / trends
   - `/viewer` 支持过滤（query/project/mode/session/errorClass/from/to）与导出链接

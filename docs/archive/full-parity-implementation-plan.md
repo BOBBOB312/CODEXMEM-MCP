@@ -136,6 +136,6 @@
 ---
 
 本计划文件用于“完全对齐”实施主线，执行过程中请同步更新：
-- `docs/implementation-status.md`
-- `docs/acceptance-test-cases.md`
-- `docs/compatibility-matrix.md`
+- `docs/active/implementation-status.md`
+- `docs/release/acceptance-test-cases.md`
+- `docs/archive/compatibility-matrix.md`

@@ -1,0 +1,42 @@
+{
+  "eventResults": [
+    {
+      "index": 0,
+      "event": "session-init",
+      "result": {
+        "sessionDbId": 1,
+        "promptNumber": 1,
+        "skipped": false
+      }
+    },
+    {
+      "index": 1,
+      "event": "observation",
+      "result": {
+        "status": "queued"
+      }
+    },
+    {
+      "index": 2,
+      "event": "observation",
+      "result": {
+        "status": "queued"
+      }
+    },
+    {
+      "index": 3,
+      "event": "summarize",
+      "result": {
+        "status": "queued"
+      }
+    },
+    {
+      "index": 4,
+      "event": "session-complete",
+      "result": {
+        "status": "completed",
+        "sessionDbId": 1
+      }
+    }
+  ]
+}

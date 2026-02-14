@@ -1,0 +1,172 @@
+{
+  "generatedAt": "2026-02-14T10:47:16.821Z",
+  "inputs": {
+    "claudeUrl": "http://127.0.0.1:37888",
+    "codexUrl": "http://127.0.0.1:37777"
+  },
+  "claude": {
+    "baseUrl": "http://127.0.0.1:37888",
+    "project": "live-parity-claude-1771066036206",
+    "checks": [
+      {
+        "name": "health",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "readiness",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "version",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "projects",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "stats",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "memory.save.1",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "memory.save.2",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "memory.save.3",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "observations.list",
+        "ok": true,
+        "status": 200,
+        "detail": "count=3"
+      },
+      {
+        "name": "observation.detail",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "search",
+        "ok": true,
+        "status": 200,
+        "detail": "hits=3"
+      },
+      {
+        "name": "context.inject",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "timeline",
+        "ok": true,
+        "status": 200
+      }
+    ],
+    "observationIds": [
+      6,
+      7,
+      5
+    ],
+    "searchHitCount": 3,
+    "passed": true
+  },
+  "codex": {
+    "baseUrl": "http://127.0.0.1:37777",
+    "project": "live-parity-codex-1771066036206",
+    "checks": [
+      {
+        "name": "health",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "readiness",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "version",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "projects",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "stats",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "memory.save.1",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "memory.save.2",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "memory.save.3",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "observations.list",
+        "ok": true,
+        "status": 200,
+        "detail": "count=3"
+      },
+      {
+        "name": "observation.detail",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "search",
+        "ok": true,
+        "status": 200,
+        "detail": "hits=1"
+      },
+      {
+        "name": "context.inject",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "name": "timeline",
+        "ok": true,
+        "status": 200
+      }
+    ],
+    "observationIds": [
+      5,
+      6,
+      7
+    ],
+    "searchHitCount": 1,
+    "passed": true
+  },
+  "compare": {
+    "passed": true,
+    "notes": []
+  },
+  "passed": true
+}

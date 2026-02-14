@@ -1,0 +1,33 @@
+[
+  {
+    "event": "session-init",
+    "contentSessionId": "p5-sample-sess-1",
+    "project": "p5-sample",
+    "prompt": "请排查登录接口 500 的问题并给出修复建议"
+  },
+  {
+    "event": "observation",
+    "contentSessionId": "p5-sample-sess-1",
+    "tool_name": "Read",
+    "tool_input": { "file": "src/auth/login.ts" },
+    "tool_response": { "content": "发现 token 校验分支缺少 null guard" },
+    "cwd": "/tmp/p5-sample"
+  },
+  {
+    "event": "observation",
+    "contentSessionId": "p5-sample-sess-1",
+    "tool_name": "Edit",
+    "tool_input": { "file": "src/auth/login.ts", "patch": "add null guard" },
+    "tool_response": { "ok": true },
+    "cwd": "/tmp/p5-sample"
+  },
+  {
+    "event": "summarize",
+    "contentSessionId": "p5-sample-sess-1",
+    "last_assistant_message": "已完成修复并补充测试，建议回归登录链路。"
+  },
+  {
+    "event": "session-complete",
+    "contentSessionId": "p5-sample-sess-1"
+  }
+]
